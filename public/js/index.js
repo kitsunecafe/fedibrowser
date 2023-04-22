@@ -90,7 +90,7 @@ function createInstanceInspector(meta) {
   const load = instance.querySelector('#load')
   load.addEventListener('click', async () => {
     load.disabled = true
-    if (!(await loadInstance(`https://${meta.uri}`))) {
+    if (!(await loadInstance(meta.uri))) {
       load.disabled = false
     }
   })
@@ -125,7 +125,7 @@ function hideInspector() {
 
 async function onNodeClick(e) {
   try {
-    const meta = await queryInstance(`https://${e.node}`)
+    const meta = await queryInstance(e.node)
     const instance = createInstanceInspector(meta)
     updateInspector(instance)
   } catch {
@@ -189,13 +189,17 @@ async function loadInstance(url) {
   }
 }
 
+function formatUrl(url) {
+  return url.replace(/https?\:\/\//, '').replace(/\/$/, '')
+}
+
 function queryInstance(url) {
-  return fetch(`${url}/api/v1/instance`, {
+  return fetch(`https://${formatUrl(url)}/api/v1/instance`, {
   }).then(res => res.json())
 }
 
 function queryPeers(url) {
-  return fetch(`${url}/api/v1/instance/peers`, {
+  return fetch(`https://${formatUrl(url)}/api/v1/instance/peers`, {
   }).then(res => res.json())
 }
 
