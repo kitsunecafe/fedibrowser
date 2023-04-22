@@ -14,9 +14,11 @@ const modal = document.querySelector('.modal')
 const form = document.querySelector('#mastodon-input')
 const input = document.querySelector('#url-input')
 const toolbar = document.querySelector('#toolbar')
+
 const inspector = document.querySelector('#inspector')
+
 const instanceTemplate = document.querySelector('#inspector-instance-template')
-const errorTemplate = document.querySelector('#inspector-error-template')
+const infoTemplate = document.querySelector('#inspector-info-template')
 
 const randomColor = () => '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0')
 const blacklist = ['.*\.activitypub\-troll\.cf']
@@ -34,6 +36,7 @@ form.addEventListener('submit', e => {
 
 let graph
 let renderer
+let currentPromise
 
 function isValidUrl(string) {
   let url
@@ -45,6 +48,12 @@ function isValidUrl(string) {
   }
 
   return url.protocol === "http:" || url.protocol === "https:"
+}
+
+function timeout(ms) {
+  return new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("timed out")), ms)
+  )
 }
 
 function gaussianRandom(mean = 0, stdev = 1) {
@@ -81,9 +90,15 @@ function removeChildren(node) {
   }
 }
 
+function createLoadingInspector(uri) {
+  const inspector = infoTemplate.content.cloneNode(true)
+  inspector.querySelector('.description').innerText = `Loading ${uri}`
+  return inspector
+}
+
 function createInstanceInspector(meta) {
   const instance = instanceTemplate.content.cloneNode(true)
-  instance.querySelector('.title').innerText = meta.title
+  instance.querySelector('.title').innerHTML = `<p>${meta.title} (<a href="https://${formatUrl(meta.uri)}" target="_blank" />${meta.uri}</a>)</p>`
   instance.querySelector('.thumbnail').src = meta.thumbnail
   instance.querySelector('.description').innerText = meta.description
 
@@ -99,7 +114,7 @@ function createInstanceInspector(meta) {
 }
 
 function createErrorInspector(uri) {
-  const instance = errorTemplate.content.cloneNode(true)
+  const instance = infoTemplate.content.cloneNode(true)
   instance.querySelector('.description').innerText = `Could not load ${uri}.`
 
   instance.querySelector('#remove').addEventListener('click', () => {
@@ -124,15 +139,25 @@ function hideInspector() {
 }
 
 async function onNodeClick(e) {
-  try {
-    const meta = await queryInstance(e.node)
-    const instance = createInstanceInspector(meta)
-    updateInspector(instance)
-  } catch {
-    const error = createErrorInspector(e.node)
-    updateInspector(error)
-  }
+  const loading = createLoadingInspector(e.node)
+  updateInspector(loading)
   showInspector()
+
+  Promise.race([
+    queryInstance(e.node).then(createInstanceInspector),
+    timeout(3000)
+  ])
+    .then(updateInspector)
+    .catch(() => createErrorInspector(e.node))
+
+  // try {
+  //   const meta = await queryInstance(e.node)
+  //   const instance = createInstanceInspector(meta)
+  //   updateInspector(instance)
+  // } catch {
+  //   const error = createErrorInspector(e.node)
+  //   updateInspector(error)
+  // }
 }
 
 async function loadInstance(url) {
@@ -201,8 +226,4 @@ function queryInstance(url) {
 function queryPeers(url) {
   return fetch(`https://${formatUrl(url)}/api/v1/instance/peers`, {
   }).then(res => res.json())
-}
-
-function createGraph() {
-  const graph = new Graph()
 }

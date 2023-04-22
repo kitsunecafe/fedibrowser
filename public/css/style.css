@@ -2,7 +2,8 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     margin: 0;
 }
 
@@ -28,16 +29,28 @@ input[type=text].error {
 }
 
 #inspector {
-    min-width: 275px;
-    max-width: 30%;
-    height: 100%;
+    width: 100%;
+    min-height: 200px;
     padding: 20px;
     border: 1px solid #555;
+    overflow-y: auto;
 }
 
 .container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+}
+
+@media only screen and (min-width: 992px) {
+    #inspector {
+        min-width: 275px;
+        max-width: 30%;
+        height: 100%;
+    }
+
+    .container {
+        flex-direction: row;
+    }
 }
 
 .hidden {
