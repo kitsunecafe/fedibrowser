@@ -90,7 +90,7 @@ function createInstanceInspector(meta) {
   const load = instance.querySelector('#load')
   load.addEventListener('click', async () => {
     load.disabled = true
-    if (!(await loadInstance(meta.uri))) {
+    if (!(await loadInstance(`https://${meta.uri}`))) {
       load.disabled = false
     }
   })
