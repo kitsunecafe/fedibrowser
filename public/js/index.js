@@ -69,7 +69,6 @@ async function init(initialUrl) {
 
   renderer = new Sigma(graph, container)
   renderer.on('clickNode', e => {
-    // loadInstance(e.node)
     onNodeClick(e)
   })
 
@@ -126,7 +125,7 @@ function hideInspector() {
 
 async function onNodeClick(e) {
   try {
-    const meta = await queryInstance(e.node)
+    const meta = await queryInstance(`https://${e.node}`)
     const instance = createInstanceInspector(meta)
     updateInspector(instance)
   } catch {
