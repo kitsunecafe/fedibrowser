@@ -1,0 +1,65 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+}
+
+html,
+body,
+#app,
+main.container,
+#graph {
+    height: 100%;
+}
+
+#app,
+#graph {
+    width: 100%;
+}
+
+input[type=text].error {
+    border-color: red;
+}
+
+.modal #feedback {
+    color: red;
+}
+
+#inspector {
+    min-width: 275px;
+    max-width: 30%;
+    height: 100%;
+    padding: 20px;
+    border: 1px solid #555;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+}
+
+.hidden {
+    display: none;
+}
+
+.thumbnail {
+    display: block;
+    max-width: 230px;
+    max-height: 95px;
+    width: auto;
+    height: auto;
+}
+
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid #555;
+    box-shadow: 10px 10px 5px #888888;
+}

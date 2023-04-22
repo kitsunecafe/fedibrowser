@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML 5 Boilerplate</title>
+    <link rel="stylesheet" href="public/css/style.css">
+    
+</head>
+
+<body>
+    <div class="modal">
+        <p id="feedback"></p>
+        <form id="mastodon-input">
+            <label>Instance URL
+                <input type="text" id="url-input" />
+            </label>
+            <input type="submit" value="OK" />
+        </form>
+    </div>
+    <div id="app">
+        <div id="toolbar"></div>
+        <main class="container">
+            <div id="graph"></div>
+            <div id="inspector" class="hidden"></div>
+        </main>
+    </div>
+    <template id="inspector-instance-template">
+        <p class="title"></p>
+        <img class="thumbnail"></thumbnail>
+        <p class="description"></p>
+        <button id="load">Load Peers</button>
+    </template>
+
+    <template id="inspector-error-template">
+        <p class="description"></p>
+        <button id="remove">Remove</button>
+    </template>
+    <script type="module" src="public/js/index.js"></script>
+</body>
+
+</html>
